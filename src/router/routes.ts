@@ -1,9 +1,14 @@
 import PassThrough from "./PassThrough.vue"
 
-const routes = [{
-    path: '/',
-    name: 'Home',
-    component: import('../views/Home.vue')
+const routes = [
+  {
+    path: "/",
+    component: () => import("../layouts/OutsideLayout.vue"),
+    children: [{
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/Login.vue')
+    }]
   },
   {
     path: '/dashboard',
