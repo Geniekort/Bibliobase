@@ -31,19 +31,29 @@
 
 <script lang="ts">
   import Vue from 'vue'
+  import LoginMutation from "../gql/login.gql"
 
   export default Vue.extend({
     name: 'LoginForm',
 
     data: () => ({
       user: {
-
+        email: "me@davidkortleven.nl",
+        password: "Apassa"
       },
       loggingIn: false
     }),
     methods: {
       submitForm(){
         this.loggingIn = true
+        const a = LoginMutation;
+        this.$apollo.mutate({
+          mutation: LoginMutation,
+          variables: {
+            email: this.user.email,
+            password: this.user.password,
+          }
+        })
         return false
       }
     }
