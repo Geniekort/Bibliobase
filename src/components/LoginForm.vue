@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-form class="py-5">
+    <v-form @submit.prevent="submitForm" class="py-5">
       <v-text-field 
         outlined
         v-model="user.email" 
@@ -17,14 +17,14 @@
         block 
         class="accent secondary--text" 
         type="submit"
-        @click.prevent="submitForm"  
       >Login!</v-btn>
     </v-form>
     <v-snackbar
       color="primary"
       v-model="loggingIn"
+      :timeout="-1"
     >
-      Logging in... {{user.email}}, {{user.password}}     
+      {{snackbarText}} 
     </v-snackbar>
   </div>
 </template>
@@ -41,20 +41,36 @@
         email: "me@davidkortleven.nl",
         password: "Apassa"
       },
+      snackbarText: "",
       loggingIn: false
     }),
     methods: {
       submitForm(){
+        this.snackbarText = "Logging in..." 
         this.loggingIn = true
-        const a = LoginMutation;
+        
         this.$apollo.mutate({
           mutation: LoginMutation,
           variables: {
             email: this.user.email,
             password: this.user.password,
-          }
+          } 
+        }).then((response: any) => {
+          if(response.data.userLogin){
+            this.handleLoginSuccess(response.data.userLogin.credentials)
+          }else{
+            this.snackbarText = "Could not login, please try again."
+            this.loggingIn = true
+          }          
+        }).catch((data) => {
+          this.snackbarText = "Could not login, please try again."
+          this.loggingIn = true
         })
         return false
+      },
+      handleLoginSuccess(creds: any){
+        this.$store.commit("authentication/login", {accessToken: creds.accessToken, uid: creds.uid, client: creds.client})
+        this.$router.push("dashboard")
       }
     }
   })
