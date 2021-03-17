@@ -19,7 +19,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import LoginForm from "@/components/LoginForm.vue"
+import LoginForm from "@/components/authentication/LoginForm.vue"
 
 @Component({
   components: {

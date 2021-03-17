@@ -10,14 +10,8 @@
       </div>
 
       <v-spacer></v-spacer>
-
-      <v-btn
-        href="#"
-        target="_blank"
-        text
-      >
-        <v-icon>mdi-logout</v-icon>
-      </v-btn>
+      <logout-button/>
+      
     </v-app-bar>
 
     <v-navigation-drawer
@@ -26,18 +20,12 @@
     app
     >
       <v-list>
-        <v-list-item class="px-2">
-          <v-list-item-avatar>
-            <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
-          </v-list-item-avatar>
-        </v-list-item>
-
         <v-list-item link>
           <v-list-item-content>
             <v-list-item-title class="title">
-              Sandra Adams
+              Bibliobase
             </v-list-item-title>
-            <v-list-item-subtitle>sandra_a88@gmail.com</v-list-item-subtitle>
+            <v-list-item-subtitle>{{userEmail}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -48,9 +36,9 @@
         nav        
       >
         <template v-for="(menuItem, index) in menuLinks" >
-          <v-divider v-if="menuItem.separator" :key="index"></v-divider>
+          <v-divider v-if="menuItem.separator" :key="index" class="my-2"></v-divider>
           <v-list-item 
-            link
+            links
             exact
             :to="menuItem.link"
             :key="menuItem.title"
@@ -72,47 +60,80 @@
 
 <script lang="ts">
 import Vue from 'vue';
-
-const menuLinks = [
-  {
-    title: 'Home',
-    icon: 'home',
-    link: {name: 'dashboard'},
-    separator: false
-  },
-  {
-    title: 'Imports',
-    icon: 'upload',
-    link: {name: 'imports_index'},
-    separator: true
-  }
-  ,
-  {
-    title: 'Categorization',
-    icon: 'shape',
-    link: '#',
-    separator: false
-  }
-  ,
-  {
-    title: 'Exploration',
-    icon: 'compass',
-    link: '#',
-    separator: false
-  }
-  ,
-  {
-    title: 'Data model',
-    icon: 'vector-triangle',
-    link: '#',
-    separator: true
-  }
-]
+import LogoutButton from "@/components/authentication/LogoutButton.vue"
 
 export default Vue.extend({
   name: 'DashboardLayout',
+  components: {
+    LogoutButton
+  },
   data: () => ({
-    menuLinks: menuLinks
   }),
+  computed: {
+    userEmail(){
+      return this.$store.state.authentication.uid || "Not logged in, something went wrong."
+    },
+    menuLinks(){
+      const hasSelectedProject = this.$route.matched.some(route => route.meta.selectedProject)
+      if(hasSelectedProject){
+        return this.projectMenuLinks
+      }else{
+        return this.rootMenuLinks
+      }
+    },
+    rootMenuLinks(){
+      return [
+        {
+          title: 'Home',
+          icon: 'home',
+          link: {name: 'dashboard'},
+          separator: false
+        }        
+      ]
+    },
+    projectMenuLinks(){
+      return [
+        {
+          title: 'Back to projects',
+          icon: 'chevron-left',
+          link: {name: 'dashboard'},
+          separator: false
+        },
+        {
+          title: 'Project Overview',
+          icon: 'home',
+          link: {name: 'project_show'},
+          separator: false
+        },
+        {
+          title: 'Imports',
+          icon: 'upload',
+          link: {name: 'imports_index'},
+          separator: true
+        }
+        ,
+        {
+          title: 'Categorization',
+          icon: 'shape',
+          link: '#',
+          separator: false
+        }
+        ,
+        {
+          title: 'Exploration',
+          icon: 'compass',
+          link: '#',
+          separator: false
+        }
+        ,
+        {
+          title: 'Data model',
+          icon: 'vector-triangle',
+          link: '#',
+          separator: true
+        }
+      ]
+    }
+  }
 });
 </script>

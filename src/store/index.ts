@@ -12,5 +12,11 @@ const modules: ModuleTree<RootState> = {
 }
 
 export default new Vuex.Store({
+  actions: {
+    initStore(context){
+      console.log("Initializing");
+      context.commit("authentication/init")
+    }
+  },
   modules
 })

@@ -24,14 +24,14 @@
       v-model="loggingIn"
       :timeout="-1"
     >
-      {{snackbarText}} 
+      {{snackbarText}}
     </v-snackbar>
   </div>
 </template>
 
 <script lang="ts">
   import Vue from 'vue'
-  import LoginMutation from "../gql/login.gql"
+  import LoginMutation from "@/gql/login.gql"
 
   export default Vue.extend({
     name: 'LoginForm',
