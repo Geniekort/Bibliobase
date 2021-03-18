@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
+import { ApolloLink, concat, split } from 'apollo-link';
+import store from '@/store'
 import { createApolloClient, restartWebsockets } from 'vue-cli-plugin-apollo/graphql-client'
 
 // Install the vue plugin
@@ -14,6 +16,19 @@ const httpEndpoint = process.env.VUE_APP_GRAPHQL_HTTP || 'http://localhost:3000/
 export const filesRoot = process.env.VUE_APP_FILES_ROOT || httpEndpoint.substr(0, httpEndpoint.indexOf('/graphql'))
 
 Vue.prototype.$filesRoot = filesRoot
+
+const authMiddleware = new ApolloLink((operation, forward) => {
+  // add the authorization to the headers
+  const desiredHeaders: any = {}
+  desiredHeaders["uid"] = store.state.authentication.uid,
+  desiredHeaders["access-token"] =  store.state.authentication.accessToken,
+  desiredHeaders["client"] =  store.state.authentication.client,
+
+  operation.setContext({
+    headers: desiredHeaders
+  });
+  return forward(operation);
+})
 
 // Config
 const defaultOptions = {
@@ -44,7 +59,7 @@ const defaultOptions = {
   // getAuth: (tokenName) => ...
 
   // Additional ApolloClient options
-  // apollo: { ... }
+  link: authMiddleware
 
   // Client local data (see apollo-link-state)
   // clientState: { resolvers: { ... }, defaults: { ... } }

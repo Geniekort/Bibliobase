@@ -70,10 +70,10 @@ export default Vue.extend({
   data: () => ({
   }),
   computed: {
-    userEmail(){
+    userEmail(): string{
       return this.$store.state.authentication.uid || "Not logged in, something went wrong."
     },
-    menuLinks(){
+    menuLinks(): any{
       const hasSelectedProject = this.$route.matched.some(route => route.meta.selectedProject)
       if(hasSelectedProject){
         return this.projectMenuLinks
@@ -81,7 +81,7 @@ export default Vue.extend({
         return this.rootMenuLinks
       }
     },
-    rootMenuLinks(){
+    rootMenuLinks(): any{
       return [
         {
           title: 'Home',
@@ -91,7 +91,7 @@ export default Vue.extend({
         }        
       ]
     },
-    projectMenuLinks(){
+    projectMenuLinks(): any{
       return [
         {
           title: 'Back to projects',
