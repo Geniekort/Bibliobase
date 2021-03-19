@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Show from "@/gql/projects/show.gql"
+import Show from "@/gql/queries/projects/show.gql"
 
 @Component({
   components: {

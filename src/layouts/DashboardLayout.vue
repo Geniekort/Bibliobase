@@ -16,7 +16,6 @@
 
     <v-navigation-drawer
     permanent
-    expand-on-hover
     app
     >
       <v-list>
@@ -39,7 +38,7 @@
           <v-divider v-if="menuItem.separator" :key="index" class="my-2"></v-divider>
           <v-list-item 
             links
-            exact
+            :exact="menuItem.exact || false"
             :to="menuItem.link"
             :key="menuItem.title"
           >
@@ -53,7 +52,7 @@
     </v-navigation-drawer>
 
     <v-main>
-      <router-view></router-view>
+        <router-view></router-view>
     </v-main>
   </v-app>
 </template>
@@ -87,6 +86,7 @@ export default Vue.extend({
           title: 'Home',
           icon: 'home',
           link: {name: 'dashboard'},
+          exact: true,
           separator: false
         }        
       ]
@@ -97,12 +97,14 @@ export default Vue.extend({
           title: 'Back to projects',
           icon: 'chevron-left',
           link: {name: 'dashboard'},
-          separator: false
+          separator: false,
+          exact: true,
         },
         {
           title: 'Project Overview',
           icon: 'home',
           link: {name: 'project_show'},
+          exact: true,
           separator: false
         },
         {

@@ -2,6 +2,7 @@
   <v-container fill-height>
     <v-row class="align-center justify-center">
       <v-col cols="12" sm="5">
+        <h1 class="text-center my-8 primary--text">Welcome to Bibliobase</h1>
         <v-card class="px-3">
           <v-card-title>Login</v-card-title>
           <v-card-text>

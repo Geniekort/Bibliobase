@@ -1,0 +1,10 @@
+mutation Create($input: ImportInput!){
+  createImport(input: $input){
+      import {
+        id
+        name
+        meta
+        parsedData
+      }
+  }
+}

@@ -49,6 +49,11 @@ const routes = [
                     path: "",
                     component: () => import("../views/dashboard/imports/Index.vue"),
                     name: "imports_index"
+                  },
+                  {
+                    path: "new",
+                    component: () => import("../views/dashboard/imports/New.vue"),
+                    name: "imports_new"
                   }
                 ]
               },

@@ -31,7 +31,7 @@
 
 <script lang="ts">
   import Vue from 'vue'
-  import LoginMutation from "@/gql/login.gql"
+  import LoginMutation from "@/gql/mutations/login.gql"
 
   export default Vue.extend({
     name: 'LoginForm',

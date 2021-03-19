@@ -25,7 +25,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from "vue-property-decorator";
-import Projects from "@/gql/projects/index.gql"
+import Projects from "@/gql/queries/projects/index.gql"
 
 @Component({
   apollo: {
