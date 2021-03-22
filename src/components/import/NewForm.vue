@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{projectId}}
     <v-form @submit.prevent="submitForm" class="py-5">
       <v-text-field 
         outlined
@@ -76,7 +75,8 @@
             }            
           } 
         }).then((response: any) => {
-          this.submitting = false         
+          this.submitting = false   
+          this.$router.push({name: "import_edit", params: {importId: response.data.createImport.import.id}})      
         }).catch((data) => {
           this.snackbarText = "Could not save import: " + data
           this.showingSnackbar = true

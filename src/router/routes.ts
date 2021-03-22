@@ -51,9 +51,9 @@ const routes = [
                     name: "imports_index"
                   },
                   {
-                    path: "new",
-                    component: () => import("../views/dashboard/imports/New.vue"),
-                    name: "imports_new"
+                    path: ":importId",
+                    component: () => import("../views/dashboard/imports/Edit.vue"),
+                    name: "import_edit"
                   }
                 ]
               },

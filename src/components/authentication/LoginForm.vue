@@ -17,7 +17,7 @@
         block 
         class="accent secondary--text" 
         type="submit"
-      >Login!</v-btn>
+      >Login</v-btn>
     </v-form>
     <v-snackbar
       color="primary"

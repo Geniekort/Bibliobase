@@ -1,0 +1,14 @@
+query Imports($id: ID!){
+  import(id: $id) {
+    id
+    name
+    meta {
+      format
+      columnSeparator
+      headers
+    }
+    createdAt
+    rawData
+    parsedData
+  }
+}
