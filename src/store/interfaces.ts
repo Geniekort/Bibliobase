@@ -8,3 +8,5 @@ export interface AuthenticationState {
 export interface RootState {
   authentication: AuthenticationState;
 }
+
+export type VForm = Vue & { validate: () => boolean }

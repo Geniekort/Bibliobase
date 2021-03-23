@@ -23,6 +23,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import ImportIndexList from "@/components/import/IndexList.vue"
 import ImportsNewForm from "@/components/import/NewForm.vue"
 
+
 @Component({
   components: {
     ImportsNewForm,

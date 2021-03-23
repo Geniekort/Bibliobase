@@ -3,8 +3,6 @@ mutation Create($input: ImportInput!){
       import {
         id
         name
-        meta
-        parsedData
       }
   }
 }

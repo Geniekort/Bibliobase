@@ -2,6 +2,7 @@ query Imports($projectId: ID!){
   imports(projectId: $projectId) {
     id
     name
+    parsed
     createdAt
   }
 }

@@ -7,15 +7,18 @@
       ></v-progress-circular>
     </div>
     <div v-else>
-      <v-form @submit.prevent="submitForm" class="py-5">
+      <v-form @submit.prevent="submitForm" class="py-5" ref="form">
         <v-row>
-          <v-col cols=12 md=4>
+          <v-col cols=12 sm=5 md=4 lg=2>
             <v-text-field 
               outlined
               v-model="editImport.name" 
               label="Name of import" 
               type="name" 
-              prepend-inner-icon="mdi-rename-box"/>
+              prepend-inner-icon="mdi-rename-box"
+              :rules="[v => !!v || 'Required']"
+              
+              />
             <v-card class="mb-7 pb-3">
               <v-card-title>Settings</v-card-title>
               <v-card-text class="text-no-wrap" >
@@ -23,15 +26,25 @@
                   :items="metaOptions.formats"
                   v-model="editImport.meta.format"
                   label="File format"
+                  :required="true"
+                  :rules="[v => !!v || 'Required']"
+                  @change="preparseData"
+                  :disabled="!metaEditable"
                 ></v-select>
                 <v-select
                   :items="metaOptions.separators"
                   v-model="editImport.meta.columnSeparator"
                   label="Column separator character"
+                  :rules="[v => !!v || 'Required']"
+                  @change="preparseData"
+                  :disabled="!metaEditable"
+
                 ></v-select>
                 <v-switch
                   v-model="editImport.meta.headers"
                   :label="`File has headers?`"
+                  @change="preparseData"
+                  :disabled="!metaEditable"
                 ></v-switch>
               </v-card-text>
             </v-card>
@@ -41,7 +54,7 @@
               :loading="submitting"
             >Save Import</v-btn>
           </v-col>
-          <v-col cols=12 md=8 class="">
+          <v-col cols=12 sm=7 md=8 lg=10 class="">
             <v-card class="mb-7 pb-3" :loading="processingFile">
               <v-card-title>Raw file content</v-card-title>
               <v-card-text class="text-no-wrap" >
@@ -50,10 +63,10 @@
               </v-card-text>
             </v-card>
 
-            <v-card class="mb-7 pb-3" :loading="processingFile">
+            <v-card class="mb-7 pb-3" :loading="preparsingFile" v-if="previewParsedData && previewParsedData.length > 0">
               <v-card-title>Parsed records preview</v-card-title>
               <v-card-text class="text-wrap" >
-                {{queriedImport.parsedData}}
+                <import-preview-records-table :records="previewParsedData"/>
               </v-card-text>
             </v-card>
             
@@ -70,11 +83,17 @@
   import { Component, Prop } from "vue-property-decorator";
   import _ from "lodash"
   import UpdateMutation from "@/gql/mutations/import/update.gql"
+  import PreparseMutation from "@/gql/mutations/import/preparse.gql"
   import ImportQuery from "@/gql/queries/imports/show.gql"
   import { SmartQuery } from 'vue-apollo-decorators';
   import { ImportQueryResult } from '@/gql/queries/imports/ImportQueryResult';
-    
+  import ImportPreviewRecordsTable from "@/components/import/PreviewRecordsTable.vue"    
+import { VForm } from '@/store/interfaces';
+
   @Component({
+    components: {
+      ImportPreviewRecordsTable
+    }
   })
   export default class ImportEditForm extends Vue {
     @Prop()
@@ -86,6 +105,8 @@
     showingSnackbar = false;
     snackbarText = "...";
     processingFile = false;
+    preparsingFile = false;
+    previewParsedData = null;
     metaOptions = {
       formats: [{text: ".CSV", value: "csv"}],
       separators: [
@@ -94,7 +115,6 @@
         { text: "Tabs (\\t)", value: "\t" },
       ]
     }
-
     editImport = {
       name: "Loading...",
       rawData: "Loading...",
@@ -110,8 +130,19 @@
       return this.editImport.rawData.replace(/(?:\r\n|\r|\n)/g, '<br>');
     }
 
+    get metaEditable(){
+      return !this.queriedImport.parsed;
+    }
+
+    /**
+     * Submit the form. When succesful, go back to the index page
+     */
     submitForm(){
+      if(!(this.$refs.form as VForm).validate()){
+        return false
+      }
       this.submitting = true     
+      
       this.$apollo.mutate({
           mutation: UpdateMutation,
           variables: {
@@ -123,7 +154,10 @@
             }            
           } 
         }).then((response: any) => {
-          this.submitting = false   
+          this.submitting = false
+          // Refetch after mutation, for easy update of cache.          
+          this.$apollo.queries.import.refetch()
+          this.$router.push({name: "imports_index"})
         }).catch((data) => {
           console.error("Could not save import", data)
           this.snackbarText = "Could not save import: " + data
@@ -132,8 +166,34 @@
         }) 
     }
 
+    /**
+     * Preparse the data to show effects of meta settings selection
+     */
+    preparseData(){
+      this.preparsingFile = true
+      this.$apollo.mutate({
+          mutation: PreparseMutation,
+          variables: {
+            id: this.importId,
+            input: {
+              meta: this.editImport.meta
+            }            
+          } 
+        }).then((response: any) => {
+          this.previewParsedData = response.data.preparseImport.import.parsedData
+          this.preparsingFile = false
+        }).catch((data) => {
+          console.error("Could not preparse import", data)
+          this.snackbarText = "Could not preparse import: " + data
+          this.showingSnackbar = true
+          this.preparsingFile = false
+        }) 
+    }
+
     @SmartQuery<ImportEditForm>({
       query: ImportQuery,
+      deep: false,
+      fetchPolicy: "network-only",
       variables() {
         return {
           id: this.importId
@@ -142,11 +202,14 @@
       result(result, key){
         this.editImport.name = result.data.import.name
         this.editImport.rawData = result.data.import.rawData
-        this.editImport.meta.format = result.data.import.meta.format
-        this.editImport.meta.columnSeparator = result.data.import.meta.columnSeparator
-        this.editImport.meta.headers = result.data.import.meta.headers
-        
-      }
+        if(result.data.import.meta){
+          this.editImport.meta.format = result.data.import.meta.format
+          this.editImport.meta.columnSeparator = result.data.import.meta.columnSeparator
+          this.editImport.meta.headers = result.data.import.meta.headers
+        }
+        this.previewParsedData = result.data.import.parsedData
+        this.$apollo.queries.import.skip = true
+      },
     })
     import: ImportQueryResult;
     

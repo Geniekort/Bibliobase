@@ -1,0 +1,9 @@
+mutation Preparse($id: ID!, $input: ImportInput!){
+  preparseImport(id: $id, input: $input){
+      import {
+        id
+        name
+        parsedData
+      }
+  }
+}
