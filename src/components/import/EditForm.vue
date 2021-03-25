@@ -153,7 +153,7 @@ import { VForm } from '@/store/interfaces';
               meta: this.editImport.meta
             }            
           } 
-        }).then((response: any) => {
+        }).then(() => {
           this.submitting = false
           // Refetch after mutation, for easy update of cache.          
           this.$apollo.queries.import.refetch()
