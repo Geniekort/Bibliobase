@@ -5,6 +5,9 @@
       color="primary"
       dark
     >
+      <div class="mr-5" v-if="$vuetify.breakpoint.mdAndDown" @click="openDrawer = !openDrawer">
+        <v-icon>mdi-menu</v-icon>
+      </div>
       <div class="d-flex align-center">
         Bibliobase
       </div>
@@ -15,10 +18,13 @@
     </v-app-bar>
 
     <v-navigation-drawer
-    permanent
+    :permanent="$vuetify.breakpoint.mdAndUp"
+    :temporary="$vuetify.breakpoint.mdAndDown"
+    v-model="openDrawer"
     app
+    mobile-breakpoint="md"
     >
-      <v-list>
+      <v-list>        
         <v-list-item link>
           <v-list-item-content>
             <v-list-item-title class="title">
@@ -67,6 +73,7 @@ export default Vue.extend({
     LogoutButton
   },
   data: () => ({
+    openDrawer: false
   }),
   computed: {
     userEmail(): string{

@@ -9,7 +9,7 @@
     <div v-else>
       <v-form @submit.prevent="submitForm" class="py-5" ref="form">
         <v-row>
-          <v-col cols=12 sm=5 md=4 lg=2>
+          <v-col cols=12 sm=5 md=4 lg=3>
             <v-text-field 
               outlined
               v-model="editImport.name" 
@@ -54,7 +54,7 @@
               :loading="submitting"
             >Save Import</v-btn>
           </v-col>
-          <v-col cols=12 sm=7 md=8 lg=10 class="">
+          <v-col cols=12 sm=7 md=8 lg=9 class="">
             <v-card class="mb-7 pb-3" :loading="processingFile">
               <v-card-title>Raw file content</v-card-title>
               <v-card-text class="text-no-wrap" >
