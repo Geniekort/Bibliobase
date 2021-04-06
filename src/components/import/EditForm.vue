@@ -22,6 +22,14 @@
             <v-card class="mb-7 pb-3">
               <v-card-title>Settings</v-card-title>
               <v-card-text class="text-no-wrap" >
+                <v-textarea
+                  label="Comments"
+                  />
+                <v-text-field
+                  label="Link to datasheet"
+                  value="[To be implemented]"
+                  disabled
+                  />
                 <v-select
                   :items="metaOptions.formats"
                   v-model="editImport.meta.format"
@@ -48,8 +56,11 @@
                 ></v-switch>
               </v-card-text>
             </v-card>
-            <v-btn          
-              class="accent secondary--text mt-5" 
+            <import-delete-button :importId="importId"
+            />
+            <v-btn
+              color="primary"
+              class="mt-5" 
               type="submit"
               :loading="submitting"
             >Save Import</v-btn>
@@ -88,11 +99,13 @@
   import { SmartQuery } from 'vue-apollo-decorators';
   import { ImportQueryResult } from '@/gql/queries/imports/ImportQueryResult';
   import ImportPreviewRecordsTable from "@/components/import/PreviewRecordsTable.vue"    
+  import ImportDeleteButton from "@/components/import/DeleteButton.vue"    
 import { VForm } from '@/store/interfaces';
 
   @Component({
     components: {
-      ImportPreviewRecordsTable
+      ImportPreviewRecordsTable,
+      ImportDeleteButton
     }
   })
   export default class ImportEditForm extends Vue {

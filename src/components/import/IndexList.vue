@@ -5,9 +5,10 @@
       <v-list elevation="3" color="">
         <v-list-item 
           three-line 
+          offset-y
           v-for="item in sortedImports" 
           :key="item.id"
-          :to="{name: 'import_edit', params:{importId: item.id}}"
+
           >
           <v-list-item-icon class="align-self-center">
             <v-tooltip right>
@@ -24,8 +25,47 @@
             <v-list-item-subtitle>
               Created {{item.createdAt | moment("LLL")}}
             </v-list-item-subtitle>
-            
           </v-list-item-content>
+          <v-list-item-action class="align-self-center">
+            <v-btn 
+              icon
+              color="secondary"
+              dark
+              :to="{name: 'import_edit', params:{importId: item.id}}"
+
+            >
+              <v-icon class="action-icon">mdi-cog</v-icon>
+            </v-btn>
+          </v-list-item-action>
+          <v-list-item-action class="align-self-center">
+            <v-menu
+              top
+              close-on-click
+              offset-x
+              bottom
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn 
+                  icon
+                  color="primary"
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon class="action-icon">mdi-play</v-icon>
+                </v-btn>
+              </template>
+
+              <v-list>
+                <v-list-item>
+                  <v-list-item-title>Curate as Manifestiations</v-list-item-title>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-title>Curate as Manifestiations</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </v-list-item-action>        
         </v-list-item>
       </v-list>
     </template>
@@ -65,5 +105,9 @@ export default class ImportsIndexList extends Vue {
 <style scoped>
   .import-status-icon{
     font-size: 37px;
+  }
+
+  .action-icon{
+    font-size: 32px !important;
   }
 </style>
