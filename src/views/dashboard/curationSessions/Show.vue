@@ -16,13 +16,16 @@
         <v-col xs=12 md=6>
           <h1>Welcome to the Curation Session {{ curationSession.id }}</h1>
           <p>Please map the attributes in your import to the attributes in the data model:</p>
+          {{curationMapping}}
         </v-col>
       </v-row>
       <v-row>
         <v-col xs=12 sm=6 md=4 lg=4>
           <mapping-selector 
             :importRecordKeys="Object.keys(curationSession.curatableRecords[0].data)"
-            :dataAttributes="curationSession.dataType.dataAttributes">
+            :dataAttributes="curationSession.dataType.dataAttributes"
+            @curation-mapping-update="updateCurationMapping"
+            >
           </mapping-selector>
         </v-col>
       </v-row>
@@ -60,8 +63,15 @@ import MappingSelector from '@/components/curationSession/MappingSelector.vue';
   }
 })
 export default class CurationSessionShow extends Mixins(DataModelMixin) {
+
+  curationMapping = {}
+
   loading(){
     this.dataModelLoading() || this.$apollo.queries.curationSession.loading
+  }
+
+  updateCurationMapping(newMapping: any){
+    this.curationMapping = newMapping
   }
 
 

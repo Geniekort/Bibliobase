@@ -1,4 +1,4 @@
-mutation createCurationSession($input: CurationSessionInput!){
+mutation createCurationSession($input: CreateCurationSessionInput!){
   createCurationSession(input: $input) {
     curationSession {
       id
