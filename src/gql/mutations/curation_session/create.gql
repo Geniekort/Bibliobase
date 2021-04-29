@@ -1,0 +1,10 @@
+mutation createCurationSession($input: CurationSessionInput!){
+  createCurationSession(input: $input) {
+    curationSession {
+      id
+      startedBy {
+        id
+      }
+    }
+  }
+}

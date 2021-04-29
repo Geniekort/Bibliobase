@@ -1,0 +1,23 @@
+query CurationSession($id: ID!){
+  curationSession(id: $id) {
+    id
+    project{
+      id
+    }
+    import {
+      id
+    }
+    dataType{
+      id
+      dataAttributes {
+        id
+        name
+      }
+    }
+
+    curatableRecords {
+      id
+      data
+    }
+  }
+}

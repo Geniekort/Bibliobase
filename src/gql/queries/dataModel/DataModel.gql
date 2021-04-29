@@ -1,0 +1,12 @@
+query DataModel($projectId: ID!){
+  dataTypes(projectId: $projectId){
+    id
+    name
+    dataAttributes {
+      id
+      name
+      attributeType
+      validationDefinition
+    }
+  }
+}

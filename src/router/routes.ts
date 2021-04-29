@@ -17,7 +17,7 @@ const routes = [
     ]
   },
   {
-    path: '/dashboard',
+    path: '/dashboard', 
     meta: { requiresAuthentication: true},
     component: () => import("../layouts/DashboardLayout.vue"),
     children: [{
@@ -54,6 +54,22 @@ const routes = [
                     path: ":importId",
                     component: () => import("../views/dashboard/imports/Edit.vue"),
                     name: "import_edit"
+                  }
+                ]
+              },
+              {
+                path: 'curation-sessions',
+                component: PassThrough,
+                children: [
+                  // {
+                  //   path: "",
+                  //   component: () => import("../views/dashboard/imports/Index.vue"),
+                  //   name: "imports_index"
+                  // },
+                  {
+                    path: ":curationSessionId",
+                    component: () => import("../views/dashboard/curationSessions/Show.vue"),
+                    name: "curation_session_show"
                   }
                 ]
               },

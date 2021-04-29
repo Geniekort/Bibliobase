@@ -16,14 +16,10 @@ const router = new VueRouter({
 
 
 router.beforeEach((to,from,next) => {
-  if(to.matched.some(record => record.meta.requiresAuthentication)){
-    if(!store.state.authentication.loggedIn){
-      next({name: "login"})
-    }else{
-      next()
-    }
+  if(to.matched.some(record => record.meta.requiresAuthentication) && !store.state.authentication.loggedIn){
+    next({name: "login"})
   }else{
-    next(); 
+    next()
   }
 })
 

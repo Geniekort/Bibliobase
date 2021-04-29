@@ -100,7 +100,7 @@
   import { ImportQueryResult } from '@/gql/queries/imports/ImportQueryResult';
   import ImportPreviewRecordsTable from "@/components/import/PreviewRecordsTable.vue"    
   import ImportDeleteButton from "@/components/import/DeleteButton.vue"    
-import { VForm } from '@/store/interfaces';
+  import { VForm } from '@/store/interfaces';
 
   @Component({
     components: {

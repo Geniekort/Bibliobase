@@ -48,20 +48,17 @@
                 <v-btn 
                   icon
                   color="primary"
-                  dark
                   v-bind="attrs"
                   v-on="on"
+                  :disabled="!item.parsed"
                 >
                   <v-icon class="action-icon">mdi-play</v-icon>
                 </v-btn>
               </template>
 
               <v-list>
-                <v-list-item>
-                  <v-list-item-title>Curate as Manifestiations</v-list-item-title>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-title>Curate as Manifestiations</v-list-item-title>
+                <v-list-item @click="createCurationSession(item.id, dataType.id)" v-for="dataType in dataTypes" :key="dataType.id">
+                  <v-list-item-title>Curate as {{dataType.name}}</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -74,14 +71,16 @@
 <script lang="ts">
 
 import Vue from 'vue'
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Mixins } from "vue-property-decorator";
 import { SmartQuery } from "vue-apollo-decorators";
 import Imports from "@/gql/queries/imports/index.gql"
 import {ImportQueryResult}  from "@/gql/queries/imports/ImportQueryResult"
+import CreateCurationSessionMutation from "@/gql/mutations/curation_session/create.gql"
+import DataModelMixin from "@/mixins/DataModel"
 
 
 @Component
-export default class ImportsIndexList extends Vue {
+export default class ImportsIndexList  extends Mixins(DataModelMixin) {
   @SmartQuery<ImportsIndexList>({
     query: Imports,
     fetchPolicy: "network-only",
@@ -98,6 +97,39 @@ export default class ImportsIndexList extends Vue {
 
   get sortedImports(){
     return (this.imports || []).sort((a,b) => a.createdAt < b.createdAt ? 1 : -1)
+  }
+
+  // Create a new curation session from an import
+  createCurationSession(importId: number, dataTypeId: number){
+    console.log("Joojoo");
+    console.log(importId);
+    CreateCurationSessionMutation
+    this.$apollo.mutate({
+      mutation: CreateCurationSessionMutation,
+      variables: {
+        input: {
+          projectId: this.projectId,
+          importId: importId,
+          dataTypeId: dataTypeId
+        }            
+      } 
+    }).then((response) => {
+      // Refetch after mutation, for easy update of cache.          
+      // this.$apollo.queries.import.refetch()
+      this.$router.push(
+        {
+          name: "curation_session_show", 
+          params: { curationSessionId: response.data.createCurationSession.curationSession.id}
+        }
+      )
+      
+    }).catch((data) => {
+      console.log("Failed!", data);
+      // console.error("Could not save import", data)
+      // this.snackbarText = "Could not save import: " + data
+      // this.showingSnackbar = true
+      // this.submitting = false
+    }) 
   }
 }
 </script>

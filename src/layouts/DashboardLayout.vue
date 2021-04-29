@@ -122,7 +122,7 @@ export default Vue.extend({
         }
         ,
         {
-          title: 'Categorization',
+          title: 'Curation',
           icon: 'shape',
           link: '#',
           separator: false
