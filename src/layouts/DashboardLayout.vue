@@ -124,7 +124,7 @@ export default Vue.extend({
         {
           title: 'Curation',
           icon: 'shape',
-          link: '#',
+          link: {name: 'curation_sessions_index'},
           separator: false
         }
         ,

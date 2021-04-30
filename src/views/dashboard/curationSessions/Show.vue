@@ -15,8 +15,6 @@
       <v-row>
         <v-col xs=12 md=6>
           <h1>Welcome to the Curation Session {{ curationSession.id }}</h1>
-          <p>Please map the attributes in your import to the attributes in the data model:</p>
-          {{curationMapping}}
         </v-col>
       </v-row>
       <v-row>
@@ -24,11 +22,13 @@
           <mapping-selector 
             :importRecordKeys="Object.keys(curationSession.curatableRecords[0].data)"
             :dataAttributes="curationSession.dataType.dataAttributes"
+            :initialMapping="curationSession.mapping"
             @curation-mapping-update="updateCurationMapping"
             >
           </mapping-selector>
         </v-col>
       </v-row>
+      <v-row><v-col><v-divider></v-divider></v-col></v-row>
       <v-row>
         <v-col>
           <curation-table :curatableRecords="curationSession.curatableRecords"></curation-table>
@@ -41,9 +41,10 @@
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
 import DataModelMixin from "@/mixins/DataModel"
-import Show from "@/gql/queries/curationSession/show.gql"
+import Show from "@/gql/queries/curationSessions/show.gql"
 import CurationTable from "@/components/curationSession/CurationTable.vue"    
 import MappingSelector from '@/components/curationSession/MappingSelector.vue';
+import UpdateCurationSessionMutation from "@/gql/mutations/curationSessions/update.gql"
 
 
 @Component({
@@ -66,12 +67,38 @@ export default class CurationSessionShow extends Mixins(DataModelMixin) {
 
   curationMapping = {}
 
+  get curationSessionId(){
+    return this.$route.params.curationSessionId;
+  }
+
   loading(){
     this.dataModelLoading() || this.$apollo.queries.curationSession.loading
   }
 
   updateCurationMapping(newMapping: any){
     this.curationMapping = newMapping
+
+
+    this.$apollo.mutate({
+      mutation: UpdateCurationSessionMutation,
+      variables: {
+        id: this.curationSessionId,
+        input: {
+          mapping: this.curationMapping
+        }            
+      } 
+    }).then((response) => {
+      // Refetch after mutation, for easy update of cache.          
+      console.log("Updated mapping", response);
+      
+      
+    }).catch((data) => {
+      console.log("Failed to update mapping!", data);
+      // console.error("Could not save import", data)
+      // this.snackbarText = "Could not save import: " + data
+      // this.showingSnackbar = true
+      // this.submitting = false
+    }) 
   }
 
 

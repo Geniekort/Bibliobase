@@ -1,6 +1,7 @@
 query CurationSession($id: ID!){
   curationSession(id: $id) {
     id
+    mapping
     project{
       id
     }

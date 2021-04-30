@@ -1,0 +1,16 @@
+query CurationSessions($projectId: ID!){
+  curationSessions(projectId: $projectId) {
+    id
+
+    import {
+      id
+      name
+    }
+    dataType{
+      id
+      name
+    }
+
+    createdAt
+  }
+}

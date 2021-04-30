@@ -61,11 +61,11 @@ const routes = [
                 path: 'curation-sessions',
                 component: PassThrough,
                 children: [
-                  // {
-                  //   path: "",
-                  //   component: () => import("../views/dashboard/imports/Index.vue"),
-                  //   name: "imports_index"
-                  // },
+                  {
+                    path: "",
+                    component: () => import("../views/dashboard/curationSessions/Index.vue"),
+                    name: "curation_sessions_index"
+                  },
                   {
                     path: ":curationSessionId",
                     component: () => import("../views/dashboard/curationSessions/Show.vue"),

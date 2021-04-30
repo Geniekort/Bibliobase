@@ -1,0 +1,10 @@
+mutation updateCurationSession($id: ID!, $input: UpdateCurationSessionInput!){
+  updateCurationSession(id: $id, input: $input) {
+    curationSession {
+      id
+      startedBy {
+        id
+      }
+    }
+  }
+}
