@@ -27,4 +27,6 @@ export interface RootState {
   dataModel: DataModelState;
 }
 
+export interface CurationMapping {[k: string]: number}
+
 export type VForm = Vue & { validate: () => boolean }

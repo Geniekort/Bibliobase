@@ -13,6 +13,7 @@ query CurationSession($id: ID!){
       dataAttributes {
         id
         name
+        attributeType
       }
     }
 

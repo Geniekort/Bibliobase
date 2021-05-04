@@ -5,34 +5,18 @@
       <v-row
         class="table-header px-3 py-2 elevation-1"
       >
+        <v-col cols=1></v-col>
         <v-col cols=1 v-for="importKey in importDataKeys" :key="importKey" class="text-left">
           <h4>{{importKey}}</h4>
         </v-col>
       </v-row>
-      <v-row 
+      <curation-table-row 
+        :curatableRecord="curatableRecord" 
+        :visibleColumns="importDataKeys"
+        :dataType="dataType"
+        :curationMapping="curationMapping" 
         v-for="curatableRecord in curatableRecords" :key="curatableRecord.id"
-        class="table-row px-3"
-        >
-        <v-col
-          v-for="importKey in importDataKeys" :key="importKey"
-          cols=1
-          class="table-cell"
-          >
-          {{curatableRecord.data[importKey]}}
-        </v-col>
-      </v-row>
-      <v-row 
-        v-for="curatableRecord in curatableRecords" :key="curatableRecord.id"
-        class="table-row px-3"
-        >
-        <v-col
-          v-for="importKey in importDataKeys" :key="importKey"
-          cols=1
-          class="table-cell"
-          >
-          {{curatableRecord.data[importKey]}}
-        </v-col>
-      </v-row>
+        />
     </div>
   </div>
 </template>
@@ -40,18 +24,26 @@
 import Vue from 'vue'
 import { Component, Prop } from "vue-property-decorator";
 import { ImportRecord } from "@/gql/queries/imports/ImportRecordInterface"
+import CurationTableRow from './Row.vue';
+import { DataType, CurationMapping } from '@/store/interfaces';
 
 @Component({
-  // apollo: { 
-  //   projects: Projects
-  // }
+  components: {
+    CurationTableRow
+  }
 })
 export default class CurationTable extends Vue {
   @Prop()
   curatableRecords: Array<ImportRecord>;
 
+  @Prop()
+  dataType: DataType;
+
+  @Prop()
+  curationMapping: CurationMapping;
 
   get importDataKeys(){
+    
     return Object.keys(this.curatableRecords[0].data).filter(n => n)
   }
 
@@ -70,24 +62,13 @@ export default class CurationTable extends Vue {
   }
 
   .table-root{
-    min-width: 3000px;
-  }
-
-  .table-row{
-    border-top: solid 1px rgba(0,0,0,0.3);
-    height: 40px;
+    min-width: 1000;
   }
 
   .table-header{
     background: white;
     position: sticky;
     top: 0;
-
-  }
-
-  .table-cell{
-    overflow: hidden;
-    word-wrap: break-word;
-    max-height: 100%;
+    z-index: 4;
   }
 </style>

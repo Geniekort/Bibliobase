@@ -68,9 +68,6 @@ export default class CurationSessionsIndexList  extends Mixins(DataModelMixin) {
 
   // Create a new curation session from an import
   createCurationSession(importId: number, dataTypeId: number){
-    console.log("Joojoo");
-    console.log(importId);
-    CreateCurationSessionMutation
     this.$apollo.mutate({
       mutation: CreateCurationSessionMutation,
       variables: {

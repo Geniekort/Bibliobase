@@ -36,7 +36,7 @@
   </v-expansion-panels>
 </template>
 <script lang="ts">
-import { DataAttribute } from '@/store/interfaces';
+import { DataAttribute, CurationMapping } from '@/store/interfaces';
 import _ from 'lodash';
 import Vue from 'vue'
 import { Component, Prop } from "vue-property-decorator";
@@ -50,9 +50,9 @@ export default class MappingSelector extends Vue {
   dataAttributes: Array<DataAttribute>;
 
   @Prop()
-  initialMapping: {[k: string]: number};
+  initialMapping: CurationMapping;
 
-  mapping: {[k: string]: number} = {}
+  mapping: CurationMapping = {}
 
 
   mounted(){

@@ -31,7 +31,11 @@
       <v-row><v-col><v-divider></v-divider></v-col></v-row>
       <v-row>
         <v-col>
-          <curation-table :curatableRecords="curationSession.curatableRecords"></curation-table>
+          <curation-table 
+            :curatableRecords="curationSession.curatableRecords" 
+            :dataType="curationSession.dataType"
+            :curationMapping="curationMapping"  
+          ></curation-table>
         </v-col>
       </v-row>
     </template>
@@ -42,9 +46,10 @@
 import { Component, Vue, Mixins } from 'vue-property-decorator';
 import DataModelMixin from "@/mixins/DataModel"
 import Show from "@/gql/queries/curationSessions/show.gql"
-import CurationTable from "@/components/curationSession/CurationTable.vue"    
+import CurationTable from "@/components/curationSession/curationTable/Table.vue"    
 import MappingSelector from '@/components/curationSession/MappingSelector.vue';
 import UpdateCurationSessionMutation from "@/gql/mutations/curationSessions/update.gql"
+import { CurationMapping } from '@/store/interfaces';
 
 
 @Component({
@@ -59,13 +64,16 @@ import UpdateCurationSessionMutation from "@/gql/mutations/curationSessions/upda
         return {
           id: this.$route.params.curationSessionId
         }
-      }
+      },
+      result(response){{
+        this.curationMapping = response.data.curationSession.mapping
+      }}
     }
   }
 })
 export default class CurationSessionShow extends Mixins(DataModelMixin) {
 
-  curationMapping = {}
+  curationMapping: CurationMapping = {}
 
   get curationSessionId(){
     return this.$route.params.curationSessionId;
