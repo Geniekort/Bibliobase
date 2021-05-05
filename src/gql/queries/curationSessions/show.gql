@@ -10,6 +10,7 @@ query CurationSession($id: ID!){
     }
     dataType{
       id
+      name
       dataAttributes {
         id
         name
@@ -20,6 +21,7 @@ query CurationSession($id: ID!){
     curatableRecords {
       id
       data
+      status
     }
   }
 }

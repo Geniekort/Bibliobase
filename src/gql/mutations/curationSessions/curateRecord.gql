@@ -1,0 +1,7 @@
+mutation curateRecord($input: CurateRecordInput!){
+  curateRecord(input: $input) {
+    curatedRecord {
+      id
+    }
+  }
+}

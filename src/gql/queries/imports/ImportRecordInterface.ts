@@ -1,5 +1,6 @@
 export interface ImportRecord {
   id: number;
-  data: string;
+  data: any;
   createdAt: string;
+  status: "" | "Create" | "Delete";
 }

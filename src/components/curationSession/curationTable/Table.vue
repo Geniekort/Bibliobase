@@ -14,7 +14,8 @@
         :curatableRecord="curatableRecord" 
         :visibleColumns="importDataKeys"
         :dataType="dataType"
-        :curationMapping="curationMapping" 
+        :curationMapping="curationMapping"
+        :curationSessionId="curationSessionId"
         v-for="curatableRecord in curatableRecords" :key="curatableRecord.id"
         />
     </div>
@@ -41,6 +42,9 @@ export default class CurationTable extends Vue {
 
   @Prop()
   curationMapping: CurationMapping;
+
+  @Prop()
+  curationSessionId: number;
 
   get importDataKeys(){
     

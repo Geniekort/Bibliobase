@@ -97,7 +97,7 @@
   import PreparseMutation from "@/gql/mutations/import/preparse.gql"
   import ImportQuery from "@/gql/queries/imports/show.gql"
   import { SmartQuery } from 'vue-apollo-decorators';
-  import { ImportQueryResult } from '@/gql/queries/imports/ImportQueryResult';
+  import { ImportQueryResult } from '@/gql/queries/imports/ImportQueryResultInterface';
   import ImportPreviewRecordsTable from "@/components/import/PreviewRecordsTable.vue"    
   import ImportDeleteButton from "@/components/import/DeleteButton.vue"    
   import { VForm } from '@/store/interfaces';

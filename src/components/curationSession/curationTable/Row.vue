@@ -4,24 +4,57 @@
     class="table-row" v-bind:class="{active: expanded}"
     >
     <v-col>
-      <v-row @click="expanded = !expanded" class="table-row-summary px-3" >
+      <v-row @click="expanded = !expanded" class="table-row-summary px-3">
         <v-col cols=1 style="width:20px;">
-          <v-icon v-if="expanded">fas fa-chevron-down</v-icon>
-          <v-icon v-else>fas fa-chevron-up</v-icon>
+          <span class="mr-3">
+            <v-icon v-if="expanded">fas fa-chevron-down</v-icon>
+            <v-icon v-else>fas fa-chevron-up</v-icon>
+          </span>
+          <span>
+            <v-icon v-if="status=='Delete'" class="error--text">fas fa-trash</v-icon>
+            <v-icon v-else-if="status=='Create'" class="primary--text">fas fa-check</v-icon>
+            <v-icon v-else>fas fa-spinner</v-icon>
+          </span>
         </v-col>
         <v-col
           v-for="importKey in visibleColumns" :key="importKey"
           cols=1
-          class="table-cell"
+          class="table-cell text-truncate"
           >
           {{curatableRecord.data[importKey]}}
         </v-col>
       </v-row>
       <transition name="expand">
         <v-row v-show="expanded" class="table-row-details mb-1">
-          <v-col>
-            <h3 class="mb-5">Curate record:</h3>
-            <curation-form :curatableRecord="curatableRecord" :dataType="dataType" :curationMapping="curationMapping" />
+          <v-col cols=12>
+          </v-col>
+          <v-col cols=12 md=3>
+            <v-card class="primaryLight">
+              <v-card-title>Original import data:</v-card-title>
+              <v-card-text>
+                <ul class="original-import-data-list">
+                  <li v-for="(value, name, index) in originalImportdata" :key="index">
+                    <b>{{name}}:</b> {{value}}
+                  </li>
+                </ul>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols=12 md=9>
+            <v-card>
+              <v-card-title>
+                Curate record as {{dataType.name}}: 
+              </v-card-title>
+              <v-card-text>
+                <curation-form 
+                  :curatableRecord="curatableRecord" 
+                  :dataType="dataType" 
+                  :curationMapping="curationMapping" 
+                  @curated="handleCuration"
+                  :curationSessionId="curationSessionId"
+                  />
+              </v-card-text>
+            </v-card>
           </v-col>
         </v-row>
       </transition>
@@ -29,11 +62,12 @@
   </v-row>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import { ImportRecord } from "@/gql/queries/imports/ImportRecordInterface";
+import { CurationMapping, DataType } from '@/store/interfaces';
+import _ from 'lodash';
+import Vue from 'vue';
 import { Component, Prop } from "vue-property-decorator";
-import { ImportRecord } from "@/gql/queries/imports/ImportRecordInterface"
 import CurationForm from './CurationForm.vue';
-import { DataType, CurationMapping } from '@/store/interfaces';
 
 @Component({
   components: {
@@ -52,10 +86,26 @@ export default class CurationTableRow extends Vue {
   
   @Prop()
   curationMapping: CurationMapping;
-  
+
+  @Prop()
+  curationSessionId: number;
+
   expanded = false;
 
+  status: string | undefined = '';
 
+  mounted(){
+    this.status = this.curatableRecord.status
+  }
+
+  get originalImportdata(){
+    return _.pickBy(this.curatableRecord.data, _.identity);
+  }
+
+  handleCuration(curationType: string){
+    this.expanded = false
+    this.status = curationType
+  }
 }
 </script>
 
@@ -89,7 +139,7 @@ export default class CurationTableRow extends Vue {
   .expand-enter-active,
   .expand-leave-active {
     transition: all 0.5s ease;
-    max-height: 150px;
+    max-height: 300px;
   }
 
   .expand-enter,
@@ -98,5 +148,10 @@ export default class CurationTableRow extends Vue {
 
     max-height: 0;
     overflow: hidden;
+  }
+
+  .original-import-data-list li{
+    white-space: wrap;
+    word-break: break-all;
   }
 </style>

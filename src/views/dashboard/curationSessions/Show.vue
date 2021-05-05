@@ -35,6 +35,8 @@
             :curatableRecords="curationSession.curatableRecords" 
             :dataType="curationSession.dataType"
             :curationMapping="curationMapping"  
+            :curationSessionId="curationSessionId"
+
           ></curation-table>
         </v-col>
       </v-row>
