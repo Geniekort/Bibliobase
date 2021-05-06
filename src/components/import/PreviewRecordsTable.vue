@@ -16,9 +16,6 @@
 
 import Vue from 'vue'
 import { Component, Prop } from "vue-property-decorator";
-import { SmartQuery } from "vue-apollo-decorators";
-import Imports from "@/gql/queries/imports/index.gql"
-import {ImportQueryResult}  from "@/gql/queries/imports/ImportQueryResultInterface"
 
 
 @Component

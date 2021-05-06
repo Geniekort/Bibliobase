@@ -6,7 +6,9 @@ query DataModel($projectId: ID!){
       id
       name
       attributeType
-      validationDefinition
+      validationDefinition {
+          referredDataType
+        }
     }
   }
 }

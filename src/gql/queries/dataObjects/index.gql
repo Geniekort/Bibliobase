@@ -1,0 +1,6 @@
+query dataObjects($dataTypeId: ID!){
+  dataObjectsForDataType(dataTypeId: $dataTypeId){
+    id
+    data
+  }
+}

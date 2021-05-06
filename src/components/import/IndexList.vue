@@ -72,7 +72,7 @@ import Vue from 'vue'
 import { Component, Prop, Mixins } from "vue-property-decorator";
 import { SmartQuery } from "vue-apollo-decorators";
 import Imports from "@/gql/queries/imports/index.gql"
-import {ImportQueryResult}  from "@/gql/queries/imports/ImportQueryResultInterface"
+import {ImportQueryResult}  from "@/interfaces/interfaces"
 import CreateCurationSessionMutation from "@/gql/mutations/curationSessions/create.gql"
 import DataModelMixin from "@/mixins/DataModel"
 @Component

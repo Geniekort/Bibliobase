@@ -11,7 +11,7 @@ export interface DataModelState {
 }
 
 export interface DataType {
-  id: number;
+  id: string;
   name: string;
   dataAttributes: Array<DataAttribute>;
 }
@@ -20,6 +20,11 @@ export interface DataAttribute {
   id: number;
   name: string;
   attributeType: "DateTime" | "Number" | "Reference" | "Text";
+  validationDefinition: DataAttributeValidationDefinition;
+}
+
+export interface DataAttributeValidationDefinition {
+  referredDataType: { condition: {id: number} };
 }
 
 export interface RootState {

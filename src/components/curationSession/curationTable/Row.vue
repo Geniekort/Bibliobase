@@ -62,7 +62,7 @@
   </v-row>
 </template>
 <script lang="ts">
-import { ImportRecord } from "@/gql/queries/imports/ImportRecordInterface";
+import { ImportRecord } from "@/interfaces/interfaces";
 import { CurationMapping, DataType } from '@/store/interfaces';
 import _ from 'lodash';
 import Vue from 'vue';

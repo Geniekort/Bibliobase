@@ -24,7 +24,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Prop } from "vue-property-decorator";
-import { ImportRecord } from "@/gql/queries/imports/ImportRecordInterface"
+import { ImportRecord } from "@/interfaces/interfaces"
 import CurationTableRow from './Row.vue';
 import { DataType, CurationMapping } from '@/store/interfaces';
 

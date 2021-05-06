@@ -8,6 +8,7 @@
           :curatableRecord="curatableRecord" 
           :dataAttribute="dataAttribute" 
           :curationMapping="curationMapping"
+          :disabled="formDisabled"
           ref="formField"
           />
         </div>
@@ -19,6 +20,7 @@
           block 
           class="error " 
           @click="createCurationAction('Delete')"
+          :disabled="formDisabled"
         >Exclude</v-btn>
       </v-col>
       <v-col cols=6 md=3 lg=2>
@@ -26,6 +28,7 @@
         block 
         class="primary " 
         @click="createCurationAction('create')"
+        :disabled="formDisabled"
       >Save</v-btn>
       </v-col>
     </v-row>
@@ -34,7 +37,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Prop } from "vue-property-decorator";
-import { ImportRecord } from "@/gql/queries/imports/ImportRecordInterface"
+import { ImportRecord } from "@/interfaces/interfaces"
 import { DataType, CurationMapping } from '@/store/interfaces';
 import FormField from './FormField.vue';
 import CurateRecordMutation from "@/gql/mutations/curationSessions/curateRecord.gql"
@@ -65,6 +68,8 @@ export default class CurationForm extends Vue{
   get columnsWidth(){
     return Math.floor(12/this.columnsCount)
   }
+
+  createdCuration = false
 
   $refs!: {
     formField: Array<FormField>;
@@ -99,6 +104,9 @@ export default class CurationForm extends Vue{
 
     this.performCurateRecordMutation(input).then(response => {
       this.$emit("curated", 'Delete')
+    }).then(errorResponse => {
+      debugger
+      console.log(errorResponse);
     })
   }
 
@@ -117,9 +125,9 @@ export default class CurationForm extends Vue{
     }
 
     console.log(input.dataObjectData)
-    // this.performCurateRecordMutation(input).then(response => {
-    //   this.$emit("curated", 'Create')
-    // })
+    this.performCurateRecordMutation(input).then(response => {
+      this.$emit("curated", 'Create')
+    })
     
   }
 
@@ -134,16 +142,17 @@ export default class CurationForm extends Vue{
           input: input    
         } 
       }).then((response) => {
+        this.createdCuration = true
         resolve(response)        
       }).catch((data) => {
         console.log("Failed!", data);
         reject(data)
-        // console.error("Could not save import", data)
-        // this.snackbarText = "Could not save import: " + data
-        // this.showingSnackbar = true
-        // this.submitting = false
       }) 
     })
+  }
+
+  get formDisabled(){
+    return this.createdCuration || this.curatableRecord.status != ''
   }
 
 }

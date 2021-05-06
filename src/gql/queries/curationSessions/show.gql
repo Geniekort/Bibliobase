@@ -15,13 +15,24 @@ query CurationSession($id: ID!){
         id
         name
         attributeType
+        validationDefinition {
+          referredDataType
+        }
       }
     }
 
     curatableRecords {
       id
       data
-      status
+      status(curationSessionId: $id)
+      curationActions(curationSessionId: $id){
+        id
+        curationType
+        createdDataObject {
+          id
+          data
+        }
+      }
     }
   }
 }
