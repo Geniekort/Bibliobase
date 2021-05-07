@@ -1,6 +1,7 @@
 
 <template>
   <div>
+    {{lastCurationAction}}hoor
     <v-row>
       <v-col v-for="columnIndex in columnsCount" :key="columnIndex" cols=12 :md="columnsWidth">
         <div v-for="dataAttribute in attributesForColumn(columnIndex - 1)" :key="dataAttribute.id">
@@ -15,11 +16,29 @@
       </v-col>
     </v-row>
     <v-row justify="end">
+      <v-col cols=6 md=4 lg=3
+        v-if="formDisabled"
+      >
+        <v-btn 
+          block 
+          class="primaryLight" 
+          @click="updating = true"          
+        >Update curation</v-btn>
+      </v-col>
+      <v-col cols=6 md=4 lg=3
+        v-if="updating"
+      >
+        <v-btn 
+          block 
+          class="warning " 
+          @click="updating = false"          
+        >Cancel updating</v-btn>
+      </v-col>
       <v-col cols=6 md=3 lg=2>
         <v-btn 
           block 
           class="error " 
-          @click="createCurationAction('Delete')"
+          @click="createDeleteCurationAction()"
           :disabled="formDisabled"
         >Exclude</v-btn>
       </v-col>
@@ -27,7 +46,7 @@
         <v-btn 
         block 
         class="primary " 
-        @click="createCurationAction('create')"
+        @click="createCreateCurationAction()"
         :disabled="formDisabled"
       >Save</v-btn>
       </v-col>
@@ -37,10 +56,12 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Prop } from "vue-property-decorator";
-import { ImportRecord } from "@/interfaces/interfaces"
+import { CurationAction, ImportRecord } from "@/interfaces/interfaces"
 import { DataType, CurationMapping } from '@/store/interfaces';
 import FormField from './FormField.vue';
 import CurateRecordMutation from "@/gql/mutations/curationSessions/curateRecord.gql"
+import UpdateCurateRecordMutation from "@/gql/mutations/curationSessions/updateCurateRecord.gql"
+import _ from 'lodash';
 
 
 @Component({
@@ -70,6 +91,11 @@ export default class CurationForm extends Vue{
   }
 
   createdCuration = false
+  createdLastCurationAction: CurationAction;
+
+  updating = false
+
+  
 
   $refs!: {
     formField: Array<FormField>;
@@ -84,17 +110,6 @@ export default class CurationForm extends Vue{
   }
 
   /**
-   * Create a curation action of a certain curationType (one of [create, Delete])
-   */
-  createCurationAction(curationType: string){
-    if(curationType == 'create'){
-      this.createCreateCurationAction();
-    }else if(curationType == 'Delete'){
-      this.createDeleteCurationAction()
-    }
-  }
-
-  /**
    * Create a Delete curation action
    */
   createDeleteCurationAction() {
@@ -105,7 +120,6 @@ export default class CurationForm extends Vue{
     this.performCurateRecordMutation(input).then(response => {
       this.$emit("curated", 'Delete')
     }).then(errorResponse => {
-      debugger
       console.log(errorResponse);
     })
   }
@@ -133,16 +147,31 @@ export default class CurationForm extends Vue{
 
   performCurateRecordMutation(input: any){
     return new Promise((resolve, reject) => {
-      input["curationSessionId"] = this.curationSessionId
-      input["importRecordId"] = this.curatableRecord.id
-  
+      let variables;
+      if(this.updating){
+        variables = {
+          input,
+          id: this.lastCurationAction.id
+        }
+      }else{
+        input["curationSessionId"] = this.curationSessionId
+        input["importRecordId"] = this.curatableRecord.id
+        variables = { input }
+      }
+ 
       this.$apollo.mutate({
-        mutation: CurateRecordMutation,
-        variables: {
-          input: input    
-        } 
+        mutation: (this.updating ? UpdateCurateRecordMutation : CurateRecordMutation),
+        variables
       }).then((response) => {
         this.createdCuration = true
+        
+        // "Hack" to automatically refetch instead of updating the local cache, which is overly complicated.
+        let vm = this.$parent
+        while(vm) {
+            vm.$emit('mutate-curation-action')
+            vm = vm.$parent
+        }
+        
         resolve(response)        
       }).catch((data) => {
         console.log("Failed!", data);
@@ -152,7 +181,11 @@ export default class CurationForm extends Vue{
   }
 
   get formDisabled(){
-    return this.createdCuration || this.curatableRecord.status != ''
+    return !this.updating && (this.createdCuration || this.curatableRecord.status != '')
+  }
+
+  get lastCurationAction(){
+    return this.createdLastCurationAction || _.last(this.curatableRecord.curationActions)
   }
 
 }

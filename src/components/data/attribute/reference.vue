@@ -95,8 +95,7 @@ export default class ReferenceField  extends Mixins(DataModelMixin, AttributeFie
   dialog = false
 
   selectWork(dataObjectId: string){
-    this.value = parseInt(dataObjectId)
-    this.$emit('input', this.value)
+    this.$emit('input', parseInt(dataObjectId))
     this.dialog = false 
   }
 

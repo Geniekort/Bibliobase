@@ -36,7 +36,7 @@
             :dataType="curationSession.dataType"
             :curationMapping="curationMapping"  
             :curationSessionId="curationSessionId"
-
+            @mutate-curation-action="$apollo.queries.curationSession.refetch()"
           ></curation-table>
         </v-col>
       </v-row>

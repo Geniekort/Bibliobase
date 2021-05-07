@@ -28,4 +28,5 @@ export interface CurationSessionQueryResult {
   id: number;  
   createdAt: string;
   import?: ImportQueryResult;
+  curatableRecords: Array<ImportRecord>;
 }

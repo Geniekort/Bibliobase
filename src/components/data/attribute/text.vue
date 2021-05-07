@@ -1,7 +1,8 @@
 
 <template>
   <v-text-field         
-        v-model="value"
+        :value="value"
+        @input="$emit('input', $event)"
         :label="dataAttribute.name" 
         type="text" 
         prepend-inner-icon=""
