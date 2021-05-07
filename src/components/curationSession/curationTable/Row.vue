@@ -5,7 +5,7 @@
     >
     <v-col>
       <v-row @click="expanded = !expanded" class="table-row-summary px-3">
-        <v-col cols=1 style="width:20px;">
+        <div style="width:100px;" class="py-3">
           <span class="mr-3">
             <v-icon v-if="expanded">fas fa-chevron-down</v-icon>
             <v-icon v-else>fas fa-chevron-up</v-icon>
@@ -15,19 +15,17 @@
             <v-icon v-else-if="status=='Create'" class="primary--text">fas fa-check</v-icon>
             <v-icon v-else>fas fa-spinner</v-icon>
           </span>
-        </v-col>
-        <v-col
-          v-for="importKey in visibleColumns" :key="importKey"
-          cols=1
-          class="table-cell text-truncate"
+        </div>
+        <div
+          v-for="(importKey, columnIndex) in visibleColumns" :key="importKey"
+          :style="{width: $parent.columnWidths[columnIndex] + 'px'}"
+          class="table-cell text-truncate mx-2 py-3"
           >
           {{curatableRecord.data[importKey]}}
-        </v-col>
+        </div>
       </v-row>
       <transition name="expand">
         <v-row v-show="expanded" class="table-row-details mb-1">
-          <v-col cols=12>
-          </v-col>
           <v-col cols=12 md=3>
             <v-card class="primaryLight">
               <v-card-title>Original import data:</v-card-title>

@@ -29,7 +29,7 @@
       >
         <v-btn 
           block 
-          class="warning " 
+          class="" 
           @click="updating = false"          
         >Cancel updating</v-btn>
       </v-col>
@@ -47,7 +47,7 @@
         class="primary " 
         @click="createCreateCurationAction()"
         :disabled="formDisabled"
-      >Save</v-btn>
+      >Include</v-btn>
       </v-col>
     </v-row>
   </div>

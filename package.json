@@ -14,6 +14,7 @@
     "vue-apollo": "^3.0.0-beta.11",
     "vue-apollo-decorators": "^2.0.0",
     "vue-class-component": "^7.2.3",
+    "vue-draggable-resizable": "^2.3.0",
     "vue-lodash": "^2.1.2",
     "vue-moment": "^4.1.0",
     "vue-property-decorator": "^9.1.2",
