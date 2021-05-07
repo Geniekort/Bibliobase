@@ -1,7 +1,6 @@
 
 <template>
   <div>
-    {{lastCurationAction}}hoor
     <v-row>
       <v-col v-for="columnIndex in columnsCount" :key="columnIndex" cols=12 :md="columnsWidth">
         <div v-for="dataAttribute in attributesForColumn(columnIndex - 1)" :key="dataAttribute.id">
@@ -61,6 +60,8 @@ import { DataType, CurationMapping } from '@/store/interfaces';
 import FormField from './FormField.vue';
 import CurateRecordMutation from "@/gql/mutations/curationSessions/curateRecord.gql"
 import UpdateCurateRecordMutation from "@/gql/mutations/curationSessions/updateCurateRecord.gql"
+import ShowCurationSessionQuery from "@/gql/queries/curationSessions/show.gql"
+
 import _ from 'lodash';
 
 
@@ -135,7 +136,7 @@ export default class CurationForm extends Vue{
 
     const formFields = this.$refs.formField;
     for (const formField of formFields) {
-      input.dataObjectData[formField.dataAttribute.id.toString()] = formField.value
+      input.dataObjectData[formField.dataAttribute.id.toString()] = formField.value || undefined
     }
 
     console.log(input.dataObjectData)
@@ -161,17 +162,13 @@ export default class CurationForm extends Vue{
  
       this.$apollo.mutate({
         mutation: (this.updating ? UpdateCurateRecordMutation : CurateRecordMutation),
-        variables
+        variables,
+        refetchQueries: [{
+          query: ShowCurationSessionQuery,
+          variables: {id: this.$route.params.curationSessionId}
+        }]
       }).then((response) => {
-        this.createdCuration = true
-        
-        // "Hack" to automatically refetch instead of updating the local cache, which is overly complicated.
-        let vm = this.$parent
-        while(vm) {
-            vm.$emit('mutate-curation-action')
-            vm = vm.$parent
-        }
-        
+        this.createdCuration = true        
         resolve(response)        
       }).catch((data) => {
         console.log("Failed!", data);
