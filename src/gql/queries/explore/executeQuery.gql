@@ -1,0 +1,6 @@
+query executeQuery($dataTypeId: ID!, $queryString: String!){
+  executeQuery(queriedDataTypeId: $dataTypeId, queryString: $queryString){
+    id
+    data
+  }
+}

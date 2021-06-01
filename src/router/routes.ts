@@ -73,6 +73,22 @@ const routes = [
                   }
                 ]
               },
+              {
+                path: 'explore',
+                component: PassThrough,
+                children: [
+                  {
+                    path: "",
+                    component: () => import("../views/dashboard/explore/Index.vue"),
+                    name: "explore_index"
+                  },
+                  {
+                    path: ":dataTypeId",
+                    component: () => import("../views/dashboard/explore/Show.vue"),
+                    name: "explore_show"
+                  }
+                ]
+              },
             ]
           }
         ]

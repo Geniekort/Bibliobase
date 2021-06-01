@@ -131,7 +131,7 @@ export default Vue.extend({
         {
           title: 'Exploration',
           icon: 'compass',
-          link: '#',
+          link: {name: 'explore_index'},
           separator: false
         }
         ,
