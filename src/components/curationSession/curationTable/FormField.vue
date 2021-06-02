@@ -17,6 +17,8 @@ import Vue from 'vue';
 import { Component, Prop, Watch } from "vue-property-decorator";
 import ReferenceField from "@/components/data/attribute/reference.vue"
 import TextField from "@/components/data/attribute/text.vue";
+import NumberField from "@/components/data/attribute/number.vue";
+import {parseNumber, parseReference, parseText} from "@/services/dataModelHelpers"
 
 @Component({
   components:{
@@ -64,23 +66,39 @@ export default class FormField extends Vue{
   get fieldComponent(){
     switch (this.dataAttribute.attributeType) {
       case "Reference":
-        return  ReferenceField
+        return  ReferenceField;
+      case "Number": 
+        return NumberField;
       default:
         return TextField;
     }
   }
 
   setValue(currentCurationMapping: CurationMapping){
+    let newValue = "";
     if(this.createdDataObject){
-      this.value = this.createdDataObject.data[this.dataAttribute.id]
+      newValue = this.createdDataObject.data[this.dataAttribute.id]
     }else{
       const matchingImportKey = _.invert(currentCurationMapping)[this.dataAttribute.id];
       if(matchingImportKey){
-        this.value = this.curatableRecord.data[matchingImportKey]
-      }else{
-        this.value = ""
+        newValue = this.curatableRecord.data[matchingImportKey]
       }
+    }
+    
+    this.value = this.parseValue(newValue);
+  }
 
+  parseValue(value: any){
+    switch (this.dataAttribute.attributeType) {
+      case "Text":
+        return parseText(value);
+      case "Number":
+        debugger
+        return parseNumber(value);
+      case "Reference":
+        return parseReference(value);
+      default:
+        return value
     }
   }
 

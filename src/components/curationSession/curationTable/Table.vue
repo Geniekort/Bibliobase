@@ -5,6 +5,7 @@
     <smart-table 
       :records="curatableRecords" 
       :expandable="true"
+      :rowIcons="true"
       recordDataPath="data"
     >
       <template v-slot:row-details="{record}">
@@ -54,7 +55,6 @@
 import Vue from 'vue'
 import { Component, Prop } from "vue-property-decorator";
 import { ImportRecord } from "@/interfaces/interfaces"
-import CurationTableRow from './Row.vue';
 import CurationForm from './CurationForm.vue';
 import SmartTable from "@/components/smartTable/SmartTable.vue"
 import { DataType, CurationMapping } from '@/store/interfaces';
@@ -62,7 +62,6 @@ import VueDraggableResizable from 'vue-draggable-resizable'
 
 @Component({
   components: {
-    CurationTableRow,
     CurationForm,
     VueDraggableResizable,
     SmartTable

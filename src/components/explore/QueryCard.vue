@@ -20,7 +20,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primaryLight" @click="updateQuery">Update query</v-btn>
+          <v-btn color="primary" @click="updateQuery">Filter</v-btn>
         </v-card-actions>
       </v-card>
     </div>
@@ -56,11 +56,11 @@ import { codemirror } from 'vue-codemirror'
     dataType: DataType;
 
     @Prop()
-    providedError: string
+    gqlError: string
 
     parserError = ""
 
-    inputQuery="{\n}"
+    inputQuery="{\n\t\"exactly\": {\n\t\t\"title\": \"My title\"\n\t}\n}"
 
 
     cmOptions={
@@ -86,8 +86,8 @@ import { codemirror } from 'vue-codemirror'
         errors.push(this.parserError);
       }
 
-      if(this.providedError){
-        errors.push(this.providedError);
+      if(this.gqlError){
+        errors.push(this.gqlError);
       }
 
       return errors

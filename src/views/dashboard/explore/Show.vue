@@ -7,32 +7,42 @@
       ></v-progress-circular>
     </template>
     <template v-else>
-
       <h1 class="mb-5" >Explore {{queriedDataType.name}}s</h1>
-      <div class="my-3">
-        <explore-query-card :dataType="queriedDataType" @update-query="updateQuery"/>
-      </div>
-
-      <template v-if="$apollo.queries.executeQuery.loading">     
-        <v-progress-circular
-          indeterminate
-          color="primary"
-        ></v-progress-circular>
-      </template>
-      <smart-table 
-        :expandable="false" 
-        :rowIcons="false" recordDataPath="data" 
-        :records="executeQuery"
-        :allowedColumns="dataAttributeIds"  
-        v-else
-      >
-        <template v-slot:column-header="{columnName}">
-          {{dataAttributeName(columnName)}}
-        </template>
-      </smart-table>
-      <pre>
-        {{executeQuery}}
-      </pre>    
+      <v-row>
+        <v-col cols=8>
+          <explore-query-card :dataType="queriedDataType" :gqlError="gqlQueryError" @update-query="updateQuery"/>
+        </v-col>
+        <v-col>
+          <v-card>
+            <v-card-title>Frequently Asked Questions</v-card-title>
+            <v-card-text>
+              Some explanation of what is going on...
+            </v-card-text>
+          </v-card>
+        </v-col>
+        
+      </v-row>
+      <v-row>
+        <v-col>
+          <template v-if="$apollo.queries.executeQuery.loading">     
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
+          </template>
+          <smart-table 
+            :expandable="false" 
+            :rowIcons="false" recordDataPath="data" 
+            :records="executeQuery"
+            :allowedColumns="dataAttributeIds"  
+            v-else
+          >
+            <template v-slot:column-header="{columnName}">
+              {{dataAttributeName(columnName)}}
+            </template>
+          </smart-table>
+        </v-col>
+      </v-row>
     </template>
   </v-container>
 </template>
@@ -61,6 +71,9 @@ import ExploreQueryCard from "@/components/explore/QueryCard.vue"
           dataTypeId: this.queriedDataTypeId,
           queryString: this.activeQuery
         }
+      },
+      error(err: any){
+        this.gqlQueryError = err.graphQLErrors.map((gqlErr: any) => gqlErr.message).join(",")
       }
     }
   }
@@ -68,6 +81,10 @@ import ExploreQueryCard from "@/components/explore/QueryCard.vue"
 export default class ExploreShow  extends Mixins(DataModelMixin)  {
   activeQuery="";
 
+  /**
+   * Will contain errors returned from the GQL API as a result of queries
+   */
+  gqlQueryError=""
 
   get queriedDataTypeId(){
     return this.$route.params.dataTypeId
