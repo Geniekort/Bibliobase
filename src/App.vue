@@ -7,7 +7,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import 'vue-draggable-resizable/dist/VueDraggableResizable.css'
-import 'vue-prism-editor/dist/prismeditor.min.css';
 import 'codemirror/lib/codemirror.css'
 
 export default Vue.extend({

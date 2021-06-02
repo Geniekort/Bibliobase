@@ -3,6 +3,7 @@ declare module 'lodash';
 declare module 'vue-moment';
 declare module 'vue-draggable-resizable'
 declare module 'vue-codemirror'
+declare module 'jsonlint'
 
 declare module '*.gql' {
   import {DocumentNode} from 'graphql';

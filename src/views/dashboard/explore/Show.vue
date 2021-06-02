@@ -1,62 +1,57 @@
 <template>
   <v-container fluid>
-    <h1 class="mb-5">Explore {{queriedDataType.name}}s</h1>
-    <div class="my-3">
-      Query:
-      <codemirror v-model="inputQuery" :options="cmOptions" />
-      <hr class="mb-3">
-      <v-btn @click="updateQuery">Update query</v-btn>
-    </div>
-    <template v-if="$apollo.queries.executeQuery.loading">
+    <template v-if="$apollo.queries.dataTypes.loading">     
       <v-progress-circular
         indeterminate
         color="primary"
       ></v-progress-circular>
     </template>
     <template v-else>
+
+      <h1 class="mb-5" >Explore {{queriedDataType.name}}s</h1>
+      <div class="my-3">
+        <explore-query-card :dataType="queriedDataType" @update-query="updateQuery"/>
+      </div>
+
+      <template v-if="$apollo.queries.executeQuery.loading">     
+        <v-progress-circular
+          indeterminate
+          color="primary"
+        ></v-progress-circular>
+      </template>
       <smart-table 
         :expandable="false" 
         :rowIcons="false" recordDataPath="data" 
         :records="executeQuery"
         :allowedColumns="dataAttributeIds"  
+        v-else
       >
         <template v-slot:column-header="{columnName}">
           {{dataAttributeName(columnName)}}
         </template>
       </smart-table>
+      <pre>
+        {{executeQuery}}
+      </pre>    
     </template>
-    <pre>
-      {{executeQuery}}
-    </pre>    
   </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Mixins, Prop, Vue } from 'vue-property-decorator';
-import { PrismEditor } from 'vue-prism-editor';
-import * as prism from 'prismjs'
-import 'prismjs/components/prism-javascript';
-import 'codemirror/lib/codemirror.css'
-import 'codemirror/mode/javascript/javascript'
-import 'codemirror/addon/edit/matchbrackets'
-import 'codemirror/addon/edit/closebrackets'
-import 'codemirror/addon/display/placeholder'
-import 'codemirror/theme/material.css'
-
-import { codemirror } from 'vue-codemirror'
 
 
 import CurationSessionIndexList from "@/components/curationSession/IndexList.vue"
 import DataModelMixin from "@/mixins/DataModel"
 import ExecuteQuery from "@/gql/queries/explore/executeQuery.gql"
 import SmartTable from '@/components/smartTable/SmartTable.vue';
+import ExploreQueryCard from "@/components/explore/QueryCard.vue"
 
 @Component({
   components: {
     CurationSessionIndexList,
     SmartTable,
-    PrismEditor,
-    codemirror
+    ExploreQueryCard
   },
   apollo: {
     executeQuery: {
@@ -71,19 +66,8 @@ import SmartTable from '@/components/smartTable/SmartTable.vue';
   }
 })
 export default class ExploreShow  extends Mixins(DataModelMixin)  {
-  inputQuery="";
-
   activeQuery="";
 
-  cmOptions={
-    theme: "material",
-    lineNumbers: true,
-    tabSize: 4,
-    mode: {name: "javascript"},
-    matchBrackets: true,
-    autoCloseBrackets: true,
-    placeholder: "Enter your query..."
-  }
 
   get queriedDataTypeId(){
     return this.$route.params.dataTypeId
@@ -97,17 +81,13 @@ export default class ExploreShow  extends Mixins(DataModelMixin)  {
     return this.queriedDataType?.dataAttributes.map(dataAttribute => dataAttribute.id)
   }
 
-  updateQuery(){
-    this.activeQuery = this.inputQuery
+  updateQuery(newQuery: string){
+    this.activeQuery = newQuery
   }
 
   dataAttributeName(attributeId: number){
     const dataAttribute = this.queriedDataType?.dataAttributes.find(attribute => attribute.id == attributeId)
     return dataAttribute?.name || ("Invalid attribute (id= " + attributeId + ")")
-  }
-
-  highlight(code: string){
-    return prism.highlight(code, prism.languages.js, 'js')
   }
 
 }
