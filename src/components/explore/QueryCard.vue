@@ -23,7 +23,7 @@
             </ul>
           </div>
           <div class="gui" v-show="interfaceMode=='gui'">
-            <h3>Active filters</h3>
+            <query-gui-form @updateQuery="updateQueryFromGui" />
           </div>
           <div class="dsl-editor" v-show="interfaceMode=='dslEditor'">
             <codemirror 
@@ -47,6 +47,7 @@
   import { Component, Prop } from "vue-property-decorator";
   import _ from "lodash"
   import { DataType } from '@/store/interfaces';
+  import QueryGuiForm from "@/components/explore/QueryGUIForm.vue"
 
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/addon/lint/lint.css'
@@ -63,7 +64,8 @@ import { codemirror } from 'vue-codemirror'
 
   @Component({
     components: {
-      codemirror
+      codemirror,
+      QueryGuiForm
     }
   })
   export default class ExploreQueryCard extends Vue {
