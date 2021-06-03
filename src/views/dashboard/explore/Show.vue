@@ -74,7 +74,7 @@ import ExploreQueryCard from "@/components/explore/QueryCard.vue"
       },
       error(err: any){
         this.gqlQueryError = err.graphQLErrors.map((gqlErr: any) => gqlErr.message).join(",")
-      }
+      },
     }
   }
 })
@@ -99,6 +99,7 @@ export default class ExploreShow  extends Mixins(DataModelMixin)  {
   }
 
   updateQuery(newQuery: string){
+    this.gqlQueryError = ""
     this.activeQuery = newQuery
   }
 

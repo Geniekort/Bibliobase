@@ -199,7 +199,7 @@ export default class SmartTable extends Vue {
 
   .handle{
     width: 20px;
-    height: 55%;
+    height: 100%;
     border: none;
     background: none;    
     z-index: 9;
@@ -207,7 +207,7 @@ export default class SmartTable extends Vue {
 
     &::after{
       display: block;
-      width: 3px;
+      width: 2px;
       height: 100%;
       content: "";
       margin: auto;
@@ -216,7 +216,7 @@ export default class SmartTable extends Vue {
     }
 
     &.handle-mr{
-      top: 22.5%;
+      top: 0;
       margin-top: 0;
     }
   }

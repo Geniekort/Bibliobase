@@ -3,6 +3,16 @@
       <v-card >
         <v-card-title>
           Advanced Filtering
+          <v-chip class="mode-switcher" @click="switchInterfaceMode">
+            <span >
+              <span v-show="interfaceMode=='gui'">
+                <v-icon>fas fa-th-list</v-icon> (Switch to DSL editor)
+              </span>
+              <span v-show="interfaceMode=='dslEditor'">
+                <v-icon>fas fa-code</v-icon> (Switch to GUI)              
+              </span>
+            </span>
+          </v-chip>
         </v-card-title>
 
         <v-card-text>
@@ -12,10 +22,15 @@
               <li v-for="error in displayErrors" :key="error">{{error}}</li>
             </ul>
           </div>
-          <codemirror 
-            v-model="inputQuery" 
-            :options="cmOptions"
-          />
+          <div class="gui" v-show="interfaceMode=='gui'">
+            <h3>Active filters</h3>
+          </div>
+          <div class="dsl-editor" v-show="interfaceMode=='dslEditor'">
+            <codemirror 
+              v-model="inputQuery" 
+              :options="cmOptions"
+            />
+          </div>
         </v-card-text>
 
         <v-card-actions>
@@ -60,6 +75,8 @@ import { codemirror } from 'vue-codemirror'
 
     parserError = ""
 
+    interfaceMode: "gui"|"dslEditor" = "gui"
+
     inputQuery="{\n\t\"exactly\": {\n\t\t\"title\": \"My title\"\n\t}\n}"
 
 
@@ -97,6 +114,7 @@ import { codemirror } from 'vue-codemirror'
      * If the current query is valid, emit it to update the results
      */
     updateQuery(){     
+      this.parserError = ""
       try{
         JSON.parse(this.inputQuery)
         this.$emit("update-query", this.inputQuery)
@@ -104,5 +122,27 @@ import { codemirror } from 'vue-codemirror'
         this.parserError = "Invalid json: " + e
       }
     }
+
+    switchInterfaceMode(){
+      if(this.interfaceMode == 'gui' ){
+        this.interfaceMode = 'dslEditor'
+      }else{
+        this.interfaceMode = 'gui'        
+      }
+    }
   }
 </script>
+
+<style lang="scss" scoped>
+  .mode-switcher{
+    font-style: italic;
+    font-size: 14px;
+    margin-left: 10px;
+    user-select: none;
+
+    .v-icon{
+      font-size: 19px;
+    }
+  }
+
+</style>

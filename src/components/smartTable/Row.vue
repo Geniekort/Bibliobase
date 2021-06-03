@@ -28,7 +28,7 @@
           class="table-cell text-truncate mx-2 py-3"
           >
           <slot name="cell" :recordKey="recordKey">
-             <v-tooltip left max-width=350 content-class="accent black--text">
+            <v-tooltip left max-width=350 open-delay=100 content-class="accent black--text">
               <template v-slot:activator="{on, attrs}">
                 <span v-bind="attrs" v-on="on" >{{ getValueForKey(record, recordKey) }}</span>
               </template>
