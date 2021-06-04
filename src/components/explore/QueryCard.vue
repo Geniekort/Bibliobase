@@ -23,10 +23,11 @@
             </ul>
           </div>
           <div class="gui" v-show="interfaceMode=='gui'">
-            <query-gui-form @updateQuery="updateQueryFromGui" />
+            <query-gui-form @update-query="updateQueryFromGui" :dataType="dataType" />
           </div>
           <div class="dsl-editor" v-show="interfaceMode=='dslEditor'">
             <codemirror 
+              ref="cmEditor"
               v-model="inputQuery" 
               :options="cmOptions"
             />
@@ -35,7 +36,9 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="updateQuery">Filter</v-btn>
+          <template v-if="interfaceMode=='dslEditor'">
+            <v-btn color="primary" @click="updateQuery">Filter</v-btn>
+          </template>
         </v-card-actions>
       </v-card>
     </div>
@@ -44,7 +47,7 @@
 
 <script lang="ts">
   import Vue from 'vue'
-  import { Component, Prop } from "vue-property-decorator";
+  import { Component, Mixins, Prop } from "vue-property-decorator";
   import _ from "lodash"
   import { DataType } from '@/store/interfaces';
   import QueryGuiForm from "@/components/explore/QueryGUIForm.vue"
@@ -55,6 +58,7 @@ import 'codemirror/mode/javascript/javascript'
 import 'codemirror/addon/edit/matchbrackets'
 import 'codemirror/addon/edit/closebrackets'
 import 'codemirror/addon/display/placeholder'
+import 'codemirror/addon/display/autorefresh'
 import 'codemirror/addon/lint/lint'
 import 'codemirror/addon/lint/json-lint'
 import 'codemirror/theme/material.css'
@@ -84,6 +88,7 @@ import { codemirror } from 'vue-codemirror'
 
     cmOptions={
       theme: "material",
+      autoRefresh: true,
       lineNumbers: true,
       tabSize: 4,
       mode: "application/json",
@@ -97,6 +102,10 @@ import { codemirror } from 'vue-codemirror'
           this.updateQuery()          
         }
       }
+    }
+
+    $refs!: {
+      cmEditor: any;
     }
 
     get displayErrors(){
@@ -125,12 +134,23 @@ import { codemirror } from 'vue-codemirror'
       }
     }
 
+    updateQueryFromGui(newQuery: string){
+      this.inputQuery = newQuery;
+      this.updateQuery();
+    }
+
     switchInterfaceMode(){
       if(this.interfaceMode == 'gui' ){
         this.interfaceMode = 'dslEditor'
       }else{
         this.interfaceMode = 'gui'        
+        this.codeMirror.focus()
       }
+      this.codeMirror.refresh()
+    }
+
+    get codeMirror(){
+      return this.$refs.cmEditor.codemirror
     }
   }
 </script>

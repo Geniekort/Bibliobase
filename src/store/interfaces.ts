@@ -19,9 +19,11 @@ export interface DataType {
 export interface DataAttribute {
   id: number;
   name: string;
-  attributeType: "DateTime" | "Number" | "Reference" | "Text";
+  attributeType: DataAttributeType;
   validationDefinition: DataAttributeValidationDefinition;
 }
+
+export type DataAttributeType = "DateTime" | "Number" | "Reference" | "Text"; 
 
 export interface DataAttributeValidationDefinition {
   referredDataType: { condition: {id: number} };

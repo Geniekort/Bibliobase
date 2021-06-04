@@ -30,3 +30,10 @@ export interface CurationSessionQueryResult {
   import?: ImportQueryResult;
   curatableRecords: Array<ImportRecord>;
 }
+
+export enum QueryFilterMatcher {
+  EXACTLY = "exactly",
+  AT_LEAST = "atLeast",
+  AT_MOST = "atMost",
+  CONTAINS = "contains"
+}
