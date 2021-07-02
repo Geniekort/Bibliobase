@@ -115,7 +115,7 @@ export default class CurationTableRow extends Vue {
   .table-cell{
     overflow: hidden;
     word-wrap: break-word;
-    height: 40px;
+    height: 50px;
   }
 
   .table-row-details{

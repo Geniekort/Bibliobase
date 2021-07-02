@@ -23,7 +23,6 @@
             <v-btn 
               icon
               color="secondary"
-              dark
               :to="{name: 'curation_session_show', params:{curationSessionId: item.id}}"
 
             >

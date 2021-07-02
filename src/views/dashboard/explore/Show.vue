@@ -32,13 +32,24 @@
           </template>
           <smart-table 
             :expandable="false" 
-            :rowIcons="false" recordDataPath="data" 
+            :rowIcons="true" recordDataPath="data" 
             :records="executeQuery"
             :allowedColumns="dataAttributeIds"  
             v-else
           >
             <template v-slot:column-header="{columnName}">
               {{dataAttributeName(columnName)}}
+            </template>
+            <template v-slot:row-icon="{record}">
+              <v-btn
+                small 
+                icon
+                color="secondary"
+                 :to="{name: 'data_object_show', params: {dataObjectId: record.id}}"
+                >
+                <v-icon>fas fa-external-link-alt</v-icon>
+
+              </v-btn>
             </template>
           </smart-table>
         </v-col>
@@ -87,7 +98,7 @@ export default class ExploreShow  extends Mixins(DataModelMixin)  {
   gqlQueryError=""
 
   get queriedDataTypeId(){
-    return this.$route.params.dataTypeId
+    return parseInt(this.$route.params.dataTypeId)
   }
 
   get queriedDataType(){

@@ -1,5 +1,11 @@
 # bibliobase-frontend
 
+Welcome to the frontend of the Bibliobase framework. This frontend uses the GraphQL provided by the [backend](https://github.com/Geniekort/BibliobaseBackend) to process all data.
+
+You can either run this app by using npm directly, but a docker setup is also present:
+
+    $ docker-compose up --build
+
 ## Project setup
 ```
 npm install

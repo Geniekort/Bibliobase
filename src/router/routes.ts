@@ -89,6 +89,17 @@ const routes = [
                   }
                 ]
               },
+              {
+                path: 'data-objects',
+                component: PassThrough,
+                children: [
+                  {
+                    path: ":dataObjectId",
+                    component: () => import("../views/dashboard/dataObjects/Show.vue"),
+                    name: "data_object_show"
+                  }
+                ]
+              },
             ]
           }
         ]

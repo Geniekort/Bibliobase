@@ -19,4 +19,16 @@ export default class DataModel extends Vue {
   dataModelLoading(){
     return this.$apollo.queries.dataTypes.loading
   }
+
+  get allDataAttributes(){
+    return this.dataTypes.flatMap(dataType => dataType.dataAttributes)
+  }
+
+  findDataAttribute(dataAttributeId: number){
+    return this.allDataAttributes.find(dataAttribute => dataAttribute.id == dataAttributeId)
+  }
+
+  findDataType(dataTypeId: number){
+    return this.dataTypes.find(dataType => dataType.id == dataTypeId)
+  }
 }

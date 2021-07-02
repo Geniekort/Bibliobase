@@ -11,7 +11,7 @@ export interface DataModelState {
 }
 
 export interface DataType {
-  id: string;
+  id: number;
   name: string;
   dataAttributes: Array<DataAttribute>;
 }
